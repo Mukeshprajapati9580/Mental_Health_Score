@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mind Meter – Student Mental Health Score</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="layout">
+    <aside class="side">
+      <p class="brand">Mind Meter</p>
+      <h1>How is your screen time shaping your well-being?</h1>
+      <p class="lead">Fill in your daily habits and get a predicted mental health score from our model.</p>
+
+      <section class="result" id="result" aria-live="polite">
+        <div class="state state-idle" id="state-idle">
+          <div class="ring ring-empty"><span>–</span></div>
+          <p>Your score will appear here.</p>
+        </div>
+
+        <div class="state state-loading" id="state-loading" hidden>
+          <div class="spinner" role="status" aria-label="Loading"></div>
+          <p>Analysing your habits…</p>
+        </div>
+
+        <div class="state state-error" id="state-error" hidden>
+          <p class="err-title" id="error-title">Something went wrong</p>
+          <p id="error-text"></p>
+        </div>
+
+        <div class="state state-done" id="state-done" hidden>
+          <div class="ring" id="ring">
+            <svg viewBox="0 0 120 120" aria-hidden="true">
+              <circle class="track" cx="60" cy="60" r="52" />
+              <circle class="bar" id="bar" cx="60" cy="60" r="52" />
+            </svg>
+            <span id="score-value">0</span>
+          </div>
+          <p class="verdict" id="verdict"></p>
+          <p class="note" id="verdict-note"></p>
+        </div>
+      </section>
+    </aside>
+
+    <form id="predict-form" class="form" novalidate>
+      <fieldset>
+        <legend>About you</legend>
+        <div class="grid">
+          <div class="field">
+            <label for="age">Age</label>
+            <input type="number" id="age" name="age" min="11" max="99" step="1" placeholder="e.g. 20" required />
+            <small class="hint">Between 11 and 99</small>
+            <small class="error"></small>
+          </div>
+          <div class="field">
+            <label for="gender">Gender</label>
+            <select id="gender" name="gender" required>
+              <option value="" disabled selected>Select</option>
+              <option>Male</option><option>Female</option>
+            </select>
+            <small class="error"></small>
+          </div>
+          <div class="field">
+            <label for="country">Country</label>
+            <input type="text" id="country" name="country" list="countries" placeholder="e.g. India" autocomplete="off" required />
+            <datalist id="countries">
+              <option value="India"><option value="USA"><option value="Canada"><option value="Australia">
+              <option value="UK"><option value="Germany"><option value="Mexico"><option value="Turkey">
+              <option value="France"><option value="Other">
+            </datalist>
+            <small class="error"></small>
+          </div>
+          <div class="field">
+            <label for="academic_level">Academic level</label>
+            <select id="academic_level" name="academic_level" required>
+              <option value="" disabled selected>Select</option>
+              <option>High School</option><option>Undergraduate</option><option>Graduate</option>
+            </select>
+            <small class="error"></small>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Social media use</legend>
+        <div class="grid">
+          <div class="field">
+            <label for="most_used_platform">Most used platform</label>
+            <select id="most_used_platform" name="most_used_platform" required>
+              <option value="" disabled selected>Select</option>
+              <option>Facebook</option><option>Instagram</option><option>Twitter</option><option>YouTube</option>
+              <option>TikTok</option><option>Snapchat</option><option>LinkedIn</option><option>WhatsApp</option>
+              <option>WeChat</option><option>LINE</option><option>KakaoTalk</option><option>VKontakte</option>
+            </select>
+            <small class="error"></small>
+          </div>
+          <div class="field">
+            <label for="purpose_of_use">Main purpose</label>
+            <select id="purpose_of_use" name="purpose_of_use" required>
+              <option value="" disabled selected>Select</option>
+              <option>Networking</option><option>Education</option><option>Entertainment</option><option>News</option>
+            </select>
+            <small class="error"></small>
+          </div>
+          <div class="field">
+            <label for="avg_daily_usage_hours">Daily usage (hours)</label>
+            <input type="number" id="avg_daily_usage_hours" name="avg_daily_usage_hours" min="0.1" max="23.9" step="any" placeholder="e.g. 4.5" required />
+            <small class="hint">More than 0, less than 24</small>
+            <small class="error"></small>
+          </div>
+          <div class="field">
+            <label for="daily_unlocks">Daily phone unlocks</label>
+            <input type="number" id="daily_unlocks" name="daily_unlocks" min="1" step="1" placeholder="e.g. 60" required />
+            <small class="hint">At least 1</small>
+            <small class="error"></small>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Daily routine</legend>
+        <div class="grid">
+          <div class="field">
+            <label for="study_hours">Study hours</label>
+            <input type="number" id="study_hours" name="study_hours" min="0.1" max="23.9" step="any" placeholder="e.g. 3" required />
+            <small class="hint">More than 0, less than 24</small>
+            <small class="error"></small>
+          </div>
+          <div class="field">
+            <label for="physical_activity_hours">Physical activity (hours)</label>
+            <input type="number" id="physical_activity_hours" name="physical_activity_hours" min="0.01" max="1.99" step="any" placeholder="e.g. 1" required />
+            <small class="hint">More than 0, less than 2</small>
+            <small class="error"></small>
+          </div>
+          <div class="field">
+            <label for="sleep_hours_per_night">Sleep per night (hours)</label>
+            <input type="number" id="sleep_hours_per_night" name="sleep_hours_per_night" min="0.1" max="23.9" step="any" placeholder="e.g. 7" required />
+            <small class="hint">More than 0, less than 24</small>
+            <small class="error"></small>
+          </div>
+          <div class="field">
+            <label for="stress_level">Stress level</label>
+            <select id="stress_level" name="stress_level" required>
+              <option value="" disabled selected>Select</option>
+              <option>Low</option><option>Medium</option><option>High</option><option>Very High</option>
+            </select>
+            <small class="error"></small>
+          </div>
+        </div>
+      </fieldset>
+
+      <div class="actions">
+        <button type="submit" id="submit-btn">Predict my score</button>
+        <button type="reset" id="reset-btn" class="ghost">Clear form</button>
+      </div>
+    </form>
+  </main>
+  <script src="script.js"></script>
+</body>
+</html>
