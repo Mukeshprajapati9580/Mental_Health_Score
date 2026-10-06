@@ -1,4 +1,4 @@
-const API_URL = "https://mental-health-score-1-ey1r.onrender.com/";
+const API_URL = "http://127.0.0.1:8000/predict";
 
 const form = document.getElementById("predict-form");
 const submitBtn = document.getElementById("submit-btn");
@@ -22,7 +22,7 @@ const rules = {
   avg_daily_usage_hours:   { type: "float", gt: 0, lt: 24, label: "Daily usage" },
   daily_unlocks:           { type: "int",   gt: 0, label: "Daily unlocks" },
   study_hours:             { type: "float", gt: 0, lt: 24, label: "Study hours" },
-  physical_activity_hours: { type: "float", lt: 2,  label: "Physical activity" },
+  physical_activity_hours: { type: "float", gt: 0, lt: 2,  label: "Physical activity" },
   sleep_hours_per_night:   { type: "float", gt: 0, lt: 24, label: "Sleep hours" },
   stress_level:            { type: "select", label: "Stress level" },
 };
